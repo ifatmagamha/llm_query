@@ -1,10 +1,14 @@
 import streamlit as st
 import requests
 import json
-import redis # NOUVEAU
+import redis 
 from pymongo import MongoClient
 from neo4j import GraphDatabase
 from streamlit_agraph import agraph, Node, Edge, Config
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 def draw_movie_graph(records):
     nodes = []
     edges = []
@@ -44,7 +48,7 @@ def draw_movie_graph(records):
     return agraph(nodes=nodes, edges=edges, config=config)
 
 # --- CONFIGURATION ---
-GEMINI_API_KEY = "AIzaSyCL0zmnSCeWmIG14eb806NvxkaoESwg8Pk"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 MODEL_NAME = "models/gemini-2.0-flash-001"
 URL = f"https://generativelanguage.googleapis.com/v1beta/{MODEL_NAME}:generateContent?key={GEMINI_API_KEY}"
 
