@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  # MongoDB (Document Store)
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: movie_db
+
+  # Neo4j (Graph Database)
+  neo4j:
+    image: neo4j:latest
+    ports:
+      - "7474:7474" # Interface web
+      - "7687:7687" # Protocole Bolt
+    environment:
+      NEO4J_AUTH: neo4j/password123
+
+  # Redis (Key-Value Store)
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
