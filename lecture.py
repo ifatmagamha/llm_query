@@ -4,7 +4,7 @@ from neo4j import GraphDatabase
 import redis
 
 # Chargement des données
-with open('data.json', 'r') as f:
+with open('data/data.json', 'r') as f:
     movies = json.load(f)
 
 # 1. Import vers MongoDB (Document)
