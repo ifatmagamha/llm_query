@@ -1,8 +1,17 @@
-<<<<<<< HEAD
-# llm_query
-=======
-# LLM-Assisted NoSQL Query Engine (Research Prototype)
+# LLM-Assisted Multi-Model NoSQL Query System
+> **Scientific Report & Implementation Guide**
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://streamlit.io)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-blue)](https://www.docker.com/)
+
+## 1. Abstract
+This project implements a **Natural Language to NoSQL (Text-to-NoSQL)** system capable of translating user queries into optimized commands for **MongoDB (Document), Neo4j (Graph), HBase (Column), and Redis (Key-Value)**. Leveraging principles from the *SMART* framework (Lu et al., 2025) and *MultiTEND* (Qin et al., 2025), we introduce a structured intermediate JSON representation to handle schema variability and **CRUD Safety** (Create, Read, Update, Delete) in multi-model environments.
+
+---
+
+## 2. Theoretical Framework
+Our approach is grounded in recent literature on LLM-DB interfaces:
 ## Overview
 This project implements a **Research-Grade "Text-to-NoSQL" System** enabling natural language interaction with **MongoDB**, **Redis**, **Neo4j**, **HBase**, and **RDF**.
 
@@ -100,4 +109,3 @@ Based on our literature review, future iterations could include:
 ## 📜 Research References
 *   *MultiTEND: A Multilingual Benchmark for Natural Language to NoSQL Query Translation* (Qin et al., ACL 2025)
 *   *Bridging the Gap: Enabling Natural Language Queries for NoSQL Databases* (Lu et al., arXiv 2025)
->>>>>>> iter2
