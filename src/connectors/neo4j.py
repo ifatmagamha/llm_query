@@ -3,8 +3,14 @@ from typing import Any, Dict, List
 from neo4j import GraphDatabase, basic_auth
 from .base import BaseConnector, DatabaseMetadata, ExecutionResult
 
+import os
+
 class Neo4jConnector(BaseConnector):
-    def __init__(self, uri: str = "bolt://localhost:7687", user: str = "neo4j", password: str = "password", **kwargs):
+    def __init__(self, uri: str = None, user: str = None, password: str = None, **kwargs):
+        uri = uri or os.getenv("NEO4J_URI", "bolt://localhost:7687")
+        user = user or os.getenv("NEO4J_USER", "neo4j")
+        password = password or os.getenv("NEO4J_PASSWORD", "password")
+        
         super().__init__(uri, **kwargs)
         self.auth = (user, password)
         self.driver = None
@@ -16,13 +22,19 @@ class Neo4jConnector(BaseConnector):
             self.connected = True
             print("Connected to Neo4j")
         except Exception as e:
-            print(f"Failed to connect to Neo4j: {e}")
+            print(f"⚠️ Failed to connect to Neo4j: {e}")
             self.connected = False
-            raise e
+            # Do not raise
 
     def get_metadata(self) -> DatabaseMetadata:
         if not self.connected:
-            self.connect()
+            try:
+                self.connect()
+            except:
+                pass
+        
+        if not self.connected:
+            return DatabaseMetadata(db_type="neo4j", schema_summary={"error": "Disconnected"}, version="N/A")
         
         summary = {"nodes": [], "relationships": []}
         try:
@@ -50,7 +62,13 @@ class Neo4jConnector(BaseConnector):
         Executes a Cypher query.
         """
         if not self.connected:
-            self.connect()
+            try:
+                self.connect()
+            except:
+                pass
+        
+        if not self.connected:
+            return ExecutionResult(status="error", payload=None, error_message="Neo4j Disconnected")
             
         start_time = time.time()
         try:

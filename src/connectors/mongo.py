@@ -19,14 +19,20 @@ class MongoConnector(BaseConnector):
             self.connected = True
             print(f"Connected to MongoDB: {self.db_name}")
         except Exception as e:
-            print(f"Failed to connect to MongoDB: {e}")
+            print(f"⚠️ Failed to connect to MongoDB: {e}")
             self.connected = False
-            raise e
+            # Do not raise, allow graceful degradation
 
     def get_metadata(self) -> DatabaseMetadata:
         if not self.connected:
-            self.connect()
+            try:
+                self.connect()
+            except:
+                pass
         
+        if not self.connected:
+             return DatabaseMetadata(db_type="mongodb", schema_summary={"error": "Disconnected"}, version="N/A")
+
         summary = {"collections": {}}
         try:
             collections = self.db.list_collection_names()
@@ -47,15 +53,15 @@ class MongoConnector(BaseConnector):
     def execute(self, query: str, operation_type: str = "read") -> ExecutionResult:
         """
         Executes a Mongo query.
-        For MVP, query is expected to be a JSON string with:
-        {
-            "collection": "movies",
-            "operation": "find" | "aggregate" | "insert_one" ...
-            "args": { ... }
-        }
         """
         if not self.connected:
-            self.connect()
+            try:
+                self.connect()
+            except:
+                pass
+        
+        if not self.connected:
+            return ExecutionResult(status="error", payload=None, raw_response=None, error_message="MongoDB is disconnected. Please start the server.")
             
         start_time = time.time()
         try:
@@ -106,10 +112,31 @@ class MongoConnector(BaseConnector):
                     raise NotImplementedError(f"Mongo Operation {op} not implemented in connector")
 
             duration = (time.time() - start_time) * 1000
+            # Convert ObjectId to string for JSON serialization
+            original_result_data = result_data # Store original for raw_response if needed
+            sanitized_payload = []
+            if isinstance(result_data, list):
+                for doc in result_data:
+                    # Create a copy to avoid modifying the original object in place if it's used elsewhere
+                    # and to ensure _id is handled correctly if it's a BSON ObjectId
+                    if isinstance(doc, dict):
+                        new_doc = doc.copy()
+                        if "_id" in new_doc:
+                            new_doc["_id"] = str(new_doc["_id"])
+                        sanitized_payload.append(new_doc)
+                    else:
+                        sanitized_payload.append(doc) # Append non-dict items as is
+            elif isinstance(result_data, dict):
+                sanitized_payload = result_data.copy()
+                if "_id" in sanitized_payload:
+                    sanitized_payload["_id"] = str(sanitized_payload["_id"])
+            else:
+                sanitized_payload = result_data
+
             return ExecutionResult(
-                status="success",
-                payload=result_data,
-                raw_response=raw_cursor,
+                status="success", 
+                payload=sanitized_payload,
+                raw_response=original_result_data, 
                 execution_time_ms=duration
             )
 

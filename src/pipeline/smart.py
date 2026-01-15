@@ -7,6 +7,7 @@ from src.llm.provider import LLMProvider
 from src.rag.store import SimpleRAGStore
 from src.validation.policy import PolicyValidator, SafetyException
 from src.ir.models import QueryIR
+from src.pipeline.cache import SemanticCache
 
 class SmartPipeline:
     def __init__(self, connector: BaseConnector, llm: LLMProvider, rag: SimpleRAGStore):
@@ -15,6 +16,7 @@ class SmartPipeline:
         self.rag = rag
         self.validator = PolicyValidator(allow_writes=False) # Default safe
         self.max_retries = 2
+        self.cache = SemanticCache()
 
     def set_safety(self, allow_writes: bool):
         self.validator.allow_writes = allow_writes
@@ -49,13 +51,19 @@ You must output ONLY a valid JSON object. Do not wrap in markdown code blocks.
 Structure:
 {{
   "ir": {{
-    "intent": "FIND" | "AGGREGATE" | "TRAVERSAL",
+    "intent": "FIND" | "AGGREGATE" | "TRAVERSAL" | "DELETE" | "DROP" | "MUTATION",
     "target_collection": "...",
     "filters": [ ... ],
     "is_safe": true/false
   }},
   "query": "The actual executable string"
 }}
+
+IMPORTANT:
+- If the user asks to DELETE, DROP, or MODIFY data, you MUST set "intent" to "MUTATION" or "DELETE" and "is_safe" to false.
+- Do NOT sanitize the query yourself. Generate the requested potentially dangerous query (e.g., "FLUSHALL", "DROP", "DELETE"). The system validator will handle safety.
+- For Redis: "DELETE all" -> "FLUSHALL". "DELETE key" -> "DEL key".
+- For MongoDB: "drop table" -> "db.collection.drop()".
 
 For MongoDB: Query should be a JSON string like {{"collection": "...", "operation": "...", "args": ...}}
 For Neo4j: Query is Cypher string.
@@ -66,11 +74,16 @@ For HBase: Query is JSON instruction.
         return prompt
 
     def run(self, nlq: str) -> Dict[str, Any]:
+        # 0. Check Cache
+        db_type = self.connector.get_metadata().db_type
+        cached = self.cache.get(nlq, db_type)
+        if cached:
+            return cached
+
         result_log = {"steps": [], "final_result": None, "success": False}
         
         # 1. Get Metadata
         meta = self.connector.get_metadata()
-        db_type = meta.db_type
         
         # 2. RAG
         examples = self.rag.retrieve(nlq, db_type)
@@ -109,6 +122,7 @@ For HBase: Query is JSON instruction.
                     result_log["success"] = True
                     result_log["final_result"] = exec_result.payload
                     result_log["steps"].append(step_info)
+                    self.cache.set(nlq, db_type, result_log) # Cache result
                     return result_log
                 else:
                     # Execution failed

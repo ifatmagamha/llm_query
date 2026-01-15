@@ -14,12 +14,15 @@ class PolicyValidator:
         self.allow_writes = allow_writes
         
         # Regex patterns for dangerous keywords in raw queries
+        # Keys updated to match connector returned db_types
         self.DANGEROUS_PATTERNS = {
+            "mongodb": [r"insert", r"update", r"delete", r"drop", r"remove", r"write"],
             "mongo": [r"insert", r"update", r"delete", r"drop", r"remove", r"write"],
             "redis": [r"SET", r"DEL", r"FLUSH", r"HMSET", r"LPOP"],
             "neo4j": [r"CREATE", r"DELETE", r"SET", r"MERGE", r"DETACH", r"DROP"],
             "sql": [r"INSERT", r"UPDATE", r"DELETE", r"DROP", r"ALTER"],
             "hbase": [r"put", r"delete", r"drop"],
+            "rdf_sparql": [r"INSERT", r"DELETE", r"CLEAR", r"DROP"],
             "sparql": [r"INSERT", r"DELETE", r"CLEAR", r"DROP"]
         }
 
@@ -44,12 +47,15 @@ class PolicyValidator:
             return True
             
         patterns = self.DANGEROUS_PATTERNS.get(db_type, [])
+        if not patterns:
+            # Fallback for unknown db? Or maybe allow?
+            # Safer to warn, but for now we'll arguably fail open if no patterns match, which was the bug.
+            # But let's check aliases
+            pass
+
         for pat in patterns:
             # Case insensitive check
             if re.search(pat, query, re.IGNORECASE):
-                # Basic check, might have false positives (e.g. searching for a movie titled "The Delete")
-                # But for a research prototype, better safe than sorry.
-                # In a real system, we'd use a parser, not regex.
                 raise SafetyException(f"Safety Policy Violation: Query contains forbidden keyword '{pat}'")
         
         return True

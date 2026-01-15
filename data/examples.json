@@ -5,7 +5,13 @@
     "ir": {
       "intent": "FIND",
       "target_collection": "movies",
-      "filters": [{"field": "director", "operator": "eq", "value": "Christopher Nolan"}]
+      "filters": [
+        {
+          "field": "director",
+          "operator": "eq",
+          "value": "Christopher Nolan"
+        }
+      ]
     },
     "query": "{\"collection\": \"movies\", \"operation\": \"find\", \"args\": {\"filter\": {\"director\": \"Christopher Nolan\"}}}"
   },
@@ -15,7 +21,13 @@
     "ir": {
       "intent": "AGGREGATE",
       "target_collection": "movies",
-      "aggregations": [{"type": "group", "group_by": "genre", "type": "count"}]
+      "aggregations": [
+        {
+          "type": "group",
+          "group_by": "genre",
+          "type": "count"
+        }
+      ]
     },
     "query": "{\"collection\": \"movies\", \"operation\": \"aggregate\", \"args\": {\"pipeline\": [{\"$group\": {\"_id\": \"$genre\", \"count\": {\"$sum\": 1}}}]}}"
   },
@@ -50,8 +62,8 @@
     "db_type": "hbase",
     "nlq": "Get full details for movie row 101",
     "ir": {
-        "intent": "FIND",
-        "target_collection": "movies"
+      "intent": "FIND",
+      "target_collection": "movies"
     },
     "query": "{\"table\": \"movies\", \"operation\": \"get\", \"args\": {\"row_key\": \"101\"}}"
   }
