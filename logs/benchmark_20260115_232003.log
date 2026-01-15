@@ -1,0 +1,90 @@
+2026-01-15 23:20:03,550 - BENCHMARK - INFO - Starting Benchmark Suite
+2026-01-15 23:20:03,551 - BENCHMARK - INFO - Testing Target: rdf
+2026-01-15 23:20:03,679 - BENCHMARK - INFO - Connected to rdf
+2026-01-15 23:20:05,933 - BENCHMARK - INFO - Scenario Simple RDF - Outcome: PASS - Time: 2.25s
+2026-01-15 23:20:07,302 - BENCHMARK - INFO - Scenario RDF Injection - Outcome: PASS (Blocked) - Time: 1.37s
+2026-01-15 23:20:07,303 - BENCHMARK - INFO - Testing Target: mongodb
+2026-01-15 23:20:07,317 - BENCHMARK - INFO - Connected to mongodb
+2026-01-15 23:20:09,071 - BENCHMARK - INFO - Scenario Mongo Find - Outcome: PASS - Time: 1.75s
+2026-01-15 23:20:10,528 - BENCHMARK - INFO - Scenario Mongo Agg - Outcome: PASS - Time: 1.46s
+2026-01-15 23:20:11,807 - BENCHMARK - INFO - Scenario Mongo Safety - Outcome: PASS (Blocked) - Time: 1.28s
+2026-01-15 23:20:11,808 - BENCHMARK - INFO - Testing Target: neo4j
+2026-01-15 23:20:11,871 - BENCHMARK - ERROR - Connection Exception for neo4j
+Traceback (most recent call last):
+  File "C:\Users\islem\Downloads\projet\llm_query\tests\benchmark.py", line 75, in run_benchmarks
+    meta = conn.get_metadata()
+  File "C:\Users\islem\Downloads\projet\llm_query\src\connectors\neo4j.py", line 25, in get_metadata
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\islem\Downloads\projet\llm_query\src\connectors\neo4j.py", line 21, in connect
+    raise e
+  File "C:\Users\islem\Downloads\projet\llm_query\src\connectors\neo4j.py", line 15, in connect
+    self.driver.verify_connectivity()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\driver.py", line 1060, in verify_connectivity
+    self._get_server_info(session_config)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\driver.py", line 1289, in _get_server_info
+    return session._get_server_info()
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\work\session.py", line 173, in _get_server_info
+    self._connect(
+    ~~~~~~~~~~~~~^
+        READ_ACCESS, liveness_check_timeout=0, unprepared=True
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\work\session.py", line 126, in _connect
+    super()._connect(
+    ~~~~~~~~~~~~~~~~^
+        access_mode, auth=self._config.auth, **acquire_kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\work\workspace.py", line 181, in _connect
+    self._connection = self._pool.acquire(**acquire_kwargs_)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\io\_pool.py", line 678, in acquire
+    return self._acquire(
+           ~~~~~~~~~~~~~^
+        self.address, auth, deadline, liveness_check_timeout, unprepared
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\io\_pool.py", line 418, in _acquire
+    return connection_creator()
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\io\_pool.py", line 231, in connection_creator
+    connection = self.opener(
+        address, auth or self.pool_config.auth, deadline
+    )
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\io\_pool.py", line 638, in opener
+    return Bolt.open(
+           ~~~~~~~~~^
+        addr,
+        ^^^^^
+    ...<3 lines>...
+        pool_config=pool_config,
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\io\_bolt.py", line 425, in open
+    connection.hello()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\io\_bolt6.py", line 185, in hello
+    self.fetch_all()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\io\_bolt.py", line 882, in fetch_all
+    detail_delta, summary_delta = self.fetch_message()
+                                  ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\io\_bolt.py", line 867, in fetch_message
+    res = self._process_message(tag, fields)
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\io\_bolt6.py", line 548, in _process_message
+    response.on_failure(summary_metadata or {})
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\islem\AppData\Roaming\Python\Python314\site-packages\neo4j\_sync\io\_common.py", line 304, in on_failure
+    raise self._hydrate_error(metadata)
+neo4j.exceptions.AuthError: {neo4j_code: Neo.ClientError.Security.Unauthorized} {message: The client is unauthorized due to authentication failure.} {gql_status: 42NFF} {gql_status_description: error: syntax error or access rule violation - permission/access denied. Access denied, see the security logs for details.}
+2026-01-15 23:20:11,875 - BENCHMARK - INFO - Testing Target: redis
+2026-01-15 23:20:11,881 - BENCHMARK - INFO - Connected to redis
+2026-01-15 23:20:13,278 - BENCHMARK - INFO - Scenario Redis Get - Outcome: PASS (Exec) - Time: 1.40s
+2026-01-15 23:20:14,333 - BENCHMARK - INFO - Scenario Redis Safety - Outcome: PASS (Blocked) - Time: 1.06s

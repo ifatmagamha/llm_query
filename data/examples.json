@@ -1,0 +1,70 @@
+[
+  {
+    "db_type": "mongodb",
+    "nlq": "Find all movies directed by Christopher Nolan",
+    "ir": {
+      "intent": "FIND",
+      "target_collection": "movies",
+      "filters": [
+        {
+          "field": "director",
+          "operator": "eq",
+          "value": "Christopher Nolan"
+        }
+      ]
+    },
+    "query": "{\"collection\": \"movies\", \"operation\": \"find\", \"args\": {\"filter\": {\"director\": \"Christopher Nolan\"}}}"
+  },
+  {
+    "db_type": "mongodb",
+    "nlq": "How many movies are there per genre?",
+    "ir": {
+      "intent": "AGGREGATE",
+      "target_collection": "movies",
+      "aggregations": [
+        {
+          "type": "group",
+          "group_by": "genre",
+          "type": "count"
+        }
+      ]
+    },
+    "query": "{\"collection\": \"movies\", \"operation\": \"aggregate\", \"args\": {\"pipeline\": [{\"$group\": {\"_id\": \"$genre\", \"count\": {\"$sum\": 1}}}]}}"
+  },
+  {
+    "db_type": "neo4j",
+    "nlq": "Which actors played in Inception?",
+    "ir": {
+      "intent": "TRAVERSAL",
+      "target_collection": "Movie"
+    },
+    "query": "MATCH (m:Movie {title: 'Inception'})<-[:ACTED_IN]-(a:Actor) RETURN a.name"
+  },
+  {
+    "db_type": "neo4j",
+    "nlq": "Find movies rated above 9",
+    "ir": {
+      "intent": "FIND",
+      "target_collection": "Movie"
+    },
+    "query": "MATCH (m:Movie) WHERE m.rating > 9 RETURN m.title"
+  },
+  {
+    "db_type": "redis",
+    "nlq": "Get view count for movie 101",
+    "ir": {
+      "intent": "GET",
+      "target_collection": "key"
+    },
+    "query": "GET movie:101:views"
+  },
+  {
+    "db_type": "hbase",
+    "nlq": "Get full details for movie row 101",
+    "ir": {
+      "intent": "FIND",
+      "target_collection": "movies"
+    },
+    "query": "{\"table\": \"movies\", \"operation\": \"get\", \"args\": {\"row_key\": \"101\"}}"
+  }
+]

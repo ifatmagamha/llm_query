@@ -4,7 +4,11 @@ from neo4j import GraphDatabase
 import redis
 
 # Chargement des données
+<<<<<<< HEAD
 with open('data.json', 'r') as f:
+=======
+with open('data/data.json', 'r') as f:
+>>>>>>> iter2
     movies = json.load(f)
 
 # 1. Import vers MongoDB (Document)
@@ -50,7 +54,45 @@ with driver.session() as session:
 print("✅ Neo4j : Films, Acteurs et Directeurs importés avec succès.")
 # 3. Import vers Redis (Clé-Valeur)
 r = redis.Redis(host='localhost', port=6379, db=0)
+<<<<<<< HEAD
 for m in movies:
     # On stocke les vues (initialisées à 0) pour chaque film
     r.set(f"movie:{m['id']}:views", 0)
 print("✅ Redis : Compteurs de vues initialisés.")
+=======
+try:
+    for m in movies:
+        r.set(f"movie:{m['id']}:views", 0)
+    print("✅ Redis : Compteurs de vues initialisés.")
+except Exception as e:
+    print(f"❌ Redis Error: {e}")
+
+# 4. Import vers HBase (Column Family)
+try:
+    import happybase
+    connection = happybase.Connection('localhost', port=9090)
+    connection.open()
+    # Check if table exists, create if not
+    if b'movies' not in connection.tables():
+        connection.create_table(
+            'movies',
+            {'info': dict(), 'credits': dict()}
+        )
+    table = connection.table('movies')
+    
+    batch = table.batch()
+    for m in movies:
+        row_key = str(m['id']).encode('utf-8')
+        batch.put(row_key, {
+            b'info:title': m['title'].encode('utf-8'),
+            b'info:year': str(m['year']).encode('utf-8'),
+            b'info:genre': m['genre'].encode('utf-8'),
+            b'credits:director': m['director'].encode('utf-8'),
+            # Join actors list to string
+            b'credits:actors': ",".join(m['actors']).encode('utf-8')
+        })
+    batch.send()
+    print("✅ HBase : Import terminé.")
+except Exception as e:
+    print(f"⚠️ HBase Indisponible (Docker container running?): {e}")
+>>>>>>> iter2

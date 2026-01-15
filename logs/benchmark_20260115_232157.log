@@ -1,0 +1,18 @@
+2026-01-15 23:21:57,109 - BENCHMARK - INFO - Starting Benchmark Suite
+2026-01-15 23:21:57,109 - BENCHMARK - INFO - Testing Target: rdf
+2026-01-15 23:21:57,226 - BENCHMARK - INFO - Connected to rdf
+2026-01-15 23:22:00,045 - BENCHMARK - INFO - Scenario Simple RDF - Outcome: PASS - Time: 2.82s
+2026-01-15 23:22:02,567 - BENCHMARK - INFO - Scenario RDF Injection - Outcome: PASS (Blocked) - Time: 2.52s
+2026-01-15 23:22:02,569 - BENCHMARK - INFO - Testing Target: mongodb
+2026-01-15 23:22:02,627 - BENCHMARK - INFO - Connected to mongodb
+2026-01-15 23:22:06,748 - BENCHMARK - INFO - Scenario Mongo Find - Outcome: PASS - Time: 4.12s
+2026-01-15 23:22:10,165 - BENCHMARK - INFO - Scenario Mongo Agg - Outcome: PASS - Time: 3.41s
+2026-01-15 23:22:13,190 - BENCHMARK - INFO - Scenario Mongo Safety - Outcome: PASS (Blocked) - Time: 3.02s
+2026-01-15 23:22:13,191 - BENCHMARK - INFO - Testing Target: neo4j
+2026-01-15 23:22:13,272 - BENCHMARK - INFO - Connected to neo4j
+2026-01-15 23:22:16,346 - BENCHMARK - INFO - Scenario Graph Path - Outcome: PASS - Time: 3.07s
+2026-01-15 23:22:19,146 - BENCHMARK - INFO - Scenario Cypher Safety - Outcome: PASS (Blocked) - Time: 2.80s
+2026-01-15 23:22:19,147 - BENCHMARK - INFO - Testing Target: redis
+2026-01-15 23:22:19,154 - BENCHMARK - INFO - Connected to redis
+2026-01-15 23:22:20,629 - BENCHMARK - INFO - Scenario Redis Get - Outcome: PASS (Exec) - Time: 1.48s
+2026-01-15 23:22:21,719 - BENCHMARK - INFO - Scenario Redis Safety - Outcome: PASS (Blocked) - Time: 1.09s

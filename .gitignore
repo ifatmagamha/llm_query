@@ -1,1 +1,8 @@
+<<<<<<< HEAD
 .env
+=======
+.env
+venv/*
+__pycache__
+
+>>>>>>> iter2

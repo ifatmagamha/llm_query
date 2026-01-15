@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 version: '3.8'
+=======
+>>>>>>> iter2
 services:
   # MongoDB (Document Store)
   mongodb:
@@ -21,4 +24,18 @@ services:
   redis:
     image: redis:latest
     ports:
+<<<<<<< HEAD
       - "6379:6379"
+=======
+      - "6379:6379"
+
+  # HBase (Column Database)
+  hbase:
+    image: dajobe/hbase
+    ports:
+      - "16000:16000"
+      - "9090:9090"  # Thrift API
+      - "16010:16010" # Web UI
+    environment:
+      - HBASE_MANAGES_ZK=true
+>>>>>>> iter2
