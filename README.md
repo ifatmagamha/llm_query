@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# llm_query
-=======
 # LLM-Assisted NoSQL Query Engine (Research Prototype)
 
 ## Overview
@@ -100,4 +97,4 @@ Based on our literature review, future iterations could include:
 ## 📜 Research References
 *   *MultiTEND: A Multilingual Benchmark for Natural Language to NoSQL Query Translation* (Qin et al., ACL 2025)
 *   *Bridging the Gap: Enabling Natural Language Queries for NoSQL Databases* (Lu et al., arXiv 2025)
->>>>>>> iter2
+

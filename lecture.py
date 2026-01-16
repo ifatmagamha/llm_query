@@ -4,11 +4,7 @@ from neo4j import GraphDatabase
 import redis
 
 # Chargement des données
-<<<<<<< HEAD
-with open('data.json', 'r') as f:
-=======
 with open('data/data.json', 'r') as f:
->>>>>>> iter2
     movies = json.load(f)
 
 # 1. Import vers MongoDB (Document)
@@ -54,12 +50,6 @@ with driver.session() as session:
 print("✅ Neo4j : Films, Acteurs et Directeurs importés avec succès.")
 # 3. Import vers Redis (Clé-Valeur)
 r = redis.Redis(host='localhost', port=6379, db=0)
-<<<<<<< HEAD
-for m in movies:
-    # On stocke les vues (initialisées à 0) pour chaque film
-    r.set(f"movie:{m['id']}:views", 0)
-print("✅ Redis : Compteurs de vues initialisés.")
-=======
 try:
     for m in movies:
         r.set(f"movie:{m['id']}:views", 0)
@@ -95,4 +85,3 @@ try:
     print("✅ HBase : Import terminé.")
 except Exception as e:
     print(f"⚠️ HBase Indisponible (Docker container running?): {e}")
->>>>>>> iter2
