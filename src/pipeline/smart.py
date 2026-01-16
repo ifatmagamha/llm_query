@@ -56,8 +56,10 @@ Structure:
     "filters": [ ... ],
     "is_safe": true/false
   }},
-  "query": "The actual executable string"
+  "query": "The actual executable string",
+  "optimization_tips": "Brief suggestion to improve performance (e.g., 'Create index on director', 'Use compound index', 'Filter before unwind')"
 }}
+
 
 IMPORTANT:
 - If the user asks to DELETE, DROP, or MODIFY data, you MUST set "intent" to "MUTATION" or "DELETE" and "is_safe" to false.
@@ -66,7 +68,9 @@ IMPORTANT:
 - For MongoDB: "drop table" -> "db.collection.drop()".
 
 For MongoDB: Query should be a JSON string like {{"collection": "...", "operation": "...", "args": ...}}
-For Neo4j: Query is Cypher string.
+   - Use '$regex' with '$options': 'i' for text fields (names, titles) to ensure case-insensitive partial matching.
+   - Example: {{"filter": {{"director": {{"$regex": "Nolan", "$options": "i"}}}}}}
+For Neo4j: Query is Cypher string. Use 'CONTAINS' or '(?i)' for string matching.
 For Redis: Query is command string "GET key".
 For RDF: Query is SPARQL.
 For HBase: Query is JSON instruction.
@@ -106,9 +110,11 @@ For HBase: Query is JSON instruction.
                 
                 ir_data = parsed.get("ir", {})
                 query_str = parsed.get("query", "")
+                opt_tips = parsed.get("optimization_tips", None)
                 
                 step_info["parsed_ir"] = ir_data
                 step_info["parsed_query"] = query_str
+                step_info["optimization_tips"] = opt_tips
                 
                 # Validation
                 self.validator.check_ir_safety(ir_data.get("intent", "UNKNOWN"))

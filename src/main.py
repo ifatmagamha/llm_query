@@ -164,6 +164,7 @@ if prompt := st.chat_input("Enter your query (e.g., 'Who directed Inception? / F
                         comp_result["query_str"] = last.get("parsed_query", "")
                         comp_result["intent"] = last.get("parsed_ir", {}).get("intent", "UNKNOWN")
                         comp_result["latency"] = last.get("execution", {}).execution_time_ms
+                        comp_result["optimization_tips"] = last.get("optimization_tips", None)
                 return comp_result
             except Exception as e:
                 return {"db": db_type, "success": False, "error": str(e)}
@@ -207,6 +208,12 @@ if prompt := st.chat_input("Enter your query (e.g., 'Who directed Inception? / F
                 content = f"✅ **{c['intent']}** generated for **{c['db'].upper()}**\n\n```\n{c['query_str']}\n```\n**Result:**"
                 placeholder.markdown(content)
                 st.json(c["payload"])
+                
+                # Optimization Tips
+                if c.get("optimization_tips"):
+                    with st.expander("⚡ Performance & Optimization Tips"):
+                        st.info(c["optimization_tips"])
+                        
                 msg_obj = {"role": "assistant", "content": content}
                 if graph_to_render:
                     msg_obj["graph_data"] = graph_to_render
