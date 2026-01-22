@@ -16,7 +16,7 @@ This project implements a **Research-Grade "Text-to-NoSQL" System** enabling nat
 
 It utilizes the **SMART-lite** framework (**S**chema **M**atching, **A**ugmented, **R**efined **T**ranslation) to ensure high accuracy and safety when generating queries for non-relational databases.
 
-## 🚀 Features
+## Features
 *   **Polyglot Persistence**: Seamlessly queries Document, Graph, Key-Value, Columnar, and Semantic stores.
 *   **Parallel Execution Engine**: Uses `ThreadPoolExecutor` to query all 5 databases simultaneously in Cross-DB mode.
 *   **Safety-First**: `PolicyValidator` acts as a firewall, blocking adversarial mutations (`DROP`, `FLUSHALL`) even if the LLM generates them.
@@ -49,7 +49,7 @@ It utilizes the **SMART-lite** framework (**S**chema **M**atching, **A**ugmented
     python lecture.py
     ```
 
-## 🖥️ How to Run
+## How to Run
 
 ### 1. Interactive Web UI (Streamlit)
 The best way to explore the system.
@@ -78,7 +78,7 @@ python tests/comprehensive_test.py
 ```
 *   HTML/Markdown Report saved to: `reports/comprehensive_test_report.md`
 
-## 📊 Benchmarking & LLMOps
+## Benchmarking & LLMOps
 Generate a performance report measuring Latency and Accuracy across 5 test scenarios.
 
 ```bash
@@ -92,20 +92,20 @@ python tests/benchmark.py
 *   `src/ir/`: JSON definitions for Abstract Query Intent.
 *   `src/optimization/`: Scripts for Auto-Indexing.
 
-## 🎯 Objectives Achieved (University Requirements)
+## Objectives Achieved (University Requirements)
 1.  **Natural Language Query Translation**: Supports 5 paradigms (Document, Graph, Key-Value, Column, Semantic).
 2.  **Database Schema Exploration**: "Schema Explorer" in UI fetches real-time metadata (Collections, Labels, Keys).
 3.  **Query Validation**: `PolicyValidator` implements "Safe-by-Default" (blocks `DELETE`/`DROP`).
 4.  **Cross-Database Comparison**: Dedicated UI mode to compare how one NLQ translates to MongoDB vs Neo4j vs RDF.
 5.  **Research-Based**: Implements logic from *MultiTEND* (2025) and *SMART* (2025) papers.
 
-## 🔮 Future Perspectives
+## Future Perspectives
 Based on our literature review, future iterations could include:
 *   **Fine-Tuned Models**: Training Llama-3 specifically on NoSQL dialects instead of using generic LLMs.
 *   **Vector Search**: Integrating Vector Embeddings (RAG) directly into MongoDB/Redis for semantic caching.
 *   **Multi-Turn Context**: Maintaining conversational state ("Who directed it?" referring to previous result).
 
-## 📜 Research References
+## Research References
 *   *MultiTEND: A Multilingual Benchmark for Natural Language to NoSQL Query Translation* (Qin et al., ACL 2025)
 *   *Bridging the Gap: Enabling Natural Language Queries for NoSQL Databases* (Lu et al., arXiv 2025)
 
